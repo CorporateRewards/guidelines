@@ -142,5 +142,8 @@ Style/TernaryParentheses:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+Style/HashSyntax:
+  EnforcedShorthandSyntax: 'either'
+
 Layout/LineLength:
   Max: 120
