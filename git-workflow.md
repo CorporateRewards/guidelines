@@ -3,7 +3,6 @@
 ## Stable Branches
 - `master` - used for production. Must stay stable at all time. Contains the production release history.
 - `develop` - used for staging. Contains the development edge. 
-- `fastlane` - used for fastlane. Contains the development edge for an epic. 
 
 ## Development branches
 All development work must be done in a dedicated branch. This 
@@ -18,13 +17,13 @@ When you're ready to start development branch out from `master`
 ```
 git checkout master
 git pull
-git checkout -b feature/#1234-strong-passwords
+git checkout -b rew-1234_strong-passwords
 ```
 
 ```
 master  *-*-*
              \
-feature/#n    \-*-*-*-*
+rew-1234      \-*-*-*-*
 ```
 
 ### Code Review
@@ -32,12 +31,12 @@ Once you have finished a feature, open a PR to merge into `develop`.
 
 ### Acceptance
 The development branch is merged into `develop`, which should trigger a deployment
-on CircleCI.
+on our CI tool.
 
 ```
 master      ----*
                  \
-feature/#n        \-*-*-*-*
+rew-1234          \-*-*-*-*
                            \
 develop     ----------------m
 ```
@@ -48,8 +47,7 @@ successively merging the selected\* feature branches into the release branch. Th
 to be 'cherry-picked' into production without having to wait for all features in `develop`
 to receive Product Owner approval. 
 
-\**Waffle is currently used to to mark issues by adding them to the "Deploying" column. Both relsr and flightplan use the
-waffle labels to identify issues for the next release.*
+\**The process for creating and deploying releases is and should be automated, and is based on the branch naming pattern. Therefore the current branch naming pattern should be honoured in order to allow branches to be auto-released. Any branches NOT matching the patter will have to be released manually. Details for this process are out of scope for this readme. See the team knowledge base for further details*
 
 ```
 master          ---------*-------------------m-------
@@ -65,16 +63,17 @@ bug/#b                    \-*-*   \   \
 develop     --------------------m---m---m----------
 ```
 
-To create the release branch and PR you can either use [relsr](https://github.com/jcleary/relsr) on the command-line or allow [flightplan](https://flightplan.createk.io) to create
-them for you on the deployment schedule (currently PR at 10:15, merge at 10:30 daily).
 
 ### Naming convention
-Use the following naming convention:
-- Features : `feature/#1234-number-feature-title`
-- Bug: `bug/#1234-bug-title`
-- Technical: `technical/#1234-technical-issue-title`
-- Grouped Issues: `group/#1234-group-title`
-- Release: `release/yyyymmdd-hhmmss` (auto created by relsr / flightplan)
+Use the following naming convention*:
+- Features : `feature/rew-1234-number-feature-title` or `rew-1234-number-feature-title`
+- Bug: `bug/rew-1234-bug-title` or `rew-1234-bug-title`
+- Technical: `technical/rew-1234-technical-issue-title` or `rew-1234-technical-issue-title`
+- Grouped Issues: `group/rew-1234-group-title` or `rew-1234-group-title`
+- Release: `release/yyyymmdd-hhmmss`
+- Hotfix: `hotfix/yyyymmdd-hhmmss`
+
+**The key feature of the branch name for automated releases is the reference to the ticket e.g. rew-1234 as this is how the automation knows which branches match up with which tickets*
 
 ### Resolving Conflicts
 If GitHub warns you of conflicts in your PR, resolve the conflicts by merging your branch into `develop` on the command line. 
@@ -83,7 +82,7 @@ The process looks like this:
 ```bash
 git checkout develop
 git pull
-git merge feature/#1234-strong-passwords
+git merge feature/rew-1234-strong-passwords
 # resolve conflicts
 git commit
 git push
@@ -91,14 +90,18 @@ git push
 
 When you push to `develop`, GitHub will close the PR for you automatically. 
 
-### Rework
-Rework should be performed on the original branch - do not create a new branch. When the rework is finished, create a PR back to `develop` as per the normal workflow.
+If you are unable to push to `develop` you may make a release branch from develop with your branch merged in to it with the conflicts fixed as part of the merge to the develop release branch instead. Your branch should NEVER have `develop` merged in to it if it is to be ultimately merged to `master`
 
-### Special Workflow (Grouping Issues)
+### Rework
+Assuming that a ticket has not yet gone out to `master`, then reworks should be performed on the original branch - do not create a new branch. When the rework is finished, create a PR back to `develop` as per the normal workflow.
+
+If your branch has already gone out to `master` and a rework is requested, then a new ticket should be raised with the details of the change, and a new branch should be created from `master`.
+
+### Special Workflow (Grouping Issues/Epic Branches)
 From time to time it may become necessary to deploy certain features together. In these cases please ensure you follow the special workflow:
 
-1. Create a issue for combining the features. (e.g. Issue 5678 - Languages and React Group Deployment), referencing the original issues in the description using the GitHub "Duplicate of #issue_no" notation.
-1. Create a branch for the issue ( e.g. `group/#5678-languages-and-react` )
+1. Create a issue for combining the features. (e.g. rew-5678 - Languages and React Group Deployment), referencing the original issues in the description using.
+1. Create a branch for the issue ( e.g. `group/rew-5678-languages-and-react` )
 1. Merge all the feature branches into the group branch.
 1. Close the original issues.
 1. When you're ready to deploy the entire group, you will be able to create a PR for the group branch to `master`
