@@ -1,6 +1,6 @@
-# The Createk Coding Guidelines
+# Coding Guidelines
 
-These guidelines should be used when writing any code for Createk. This list is
+These guidelines should be used when writing any code for Polaris. This list is
 not exhaustive but should provide a starting point for most situations.
 
 ## Learning Resources
